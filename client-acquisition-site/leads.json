@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Greif",
+    "country": "Malaysia",
+    "city": "Shah Alam",
+    "recentJobs": 16,
+    "productionShare": 0.69,
+    "logisticsShare": 0.18,
+    "recencyDays": 5,
+    "source": "Public jobs / careers signals",
+    "summary": "Strong operations and plant hiring suggests packaging and industrial throughput expansion in Malaysia."
+  },
+  {
+    "name": "SCGM Berhad",
+    "country": "Malaysia",
+    "city": "Kulai",
+    "recentJobs": 12,
+    "productionShare": 0.74,
+    "logisticsShare": 0.11,
+    "recencyDays": 7,
+    "source": "Public jobs / careers signals",
+    "summary": "Manufacturing and shift-based openings indicate active production demand with local packaging relevance."
+  },
+  {
+    "name": "Daibochi",
+    "country": "Malaysia",
+    "city": "Melaka",
+    "recentJobs": 11,
+    "productionShare": 0.72,
+    "logisticsShare": 0.14,
+    "recencyDays": 8,
+    "source": "Public jobs / careers signals",
+    "summary": "Hiring mix points to capacity support across flexible packaging and plant execution roles."
+  },
+  {
+    "name": "Dynapack Asia",
+    "country": "Singapore",
+    "city": "Singapore",
+    "recentJobs": 9,
+    "productionShare": 0.62,
+    "logisticsShare": 0.2,
+    "recencyDays": 6,
+    "source": "Public jobs / careers signals",
+    "summary": "Regional packaging footprint and fresh hiring activity suggest near-term operating momentum."
+  },
+  {
+    "name": "Kimball Electronics",
+    "country": "Malaysia",
+    "city": "Penang",
+    "recentJobs": 18,
+    "productionShare": 0.66,
+    "logisticsShare": 0.17,
+    "recencyDays": 4,
+    "source": "Public jobs / careers signals",
+    "summary": "Electronics manufacturing ramp indicators can correlate with stronger industrial packaging requirements."
+  },
+  {
+    "name": "V.S. Industry",
+    "country": "Malaysia",
+    "city": "Senai",
+    "recentJobs": 14,
+    "productionShare": 0.71,
+    "logisticsShare": 0.15,
+    "recencyDays": 9,
+    "source": "Public jobs / careers signals",
+    "summary": "High proportion of production and plant roles suggests throughput support and supplier opportunity."
+  },
+  {
+    "name": "Vinda Singapore",
+    "country": "Singapore",
+    "city": "Singapore",
+    "recentJobs": 7,
+    "productionShare": 0.48,
+    "logisticsShare": 0.28,
+    "recencyDays": 10,
+    "source": "Public jobs / careers signals",
+    "summary": "Consumer goods hiring is moderate but distribution support roles may imply increased packaging movement."
+  },
+  {
+    "name": "Briggs Packaging",
+    "country": "Malaysia",
+    "city": "Johor Bahru",
+    "recentJobs": 8,
+    "productionShare": 0.64,
+    "logisticsShare": 0.19,
+    "recencyDays": 11,
+    "source": "Public jobs / careers signals",
+    "summary": "Consistent operational hiring makes this a relevant target for packaging supply conversations."
+  }
+]

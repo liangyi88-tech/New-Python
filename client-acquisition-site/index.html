@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VolumeSignal | Manufacturing Client Acquisition</title>
+    <meta
+      name="description"
+      content="Identify manufacturers in Singapore and Malaysia likely increasing production volume using hiring signals and public job activity."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="nav container">
+        <div class="brand">VolumeSignal</div>
+        <div class="nav-links">
+          <a href="#why">Why it works</a>
+          <a href="#signals">Signals</a>
+          <a href="#dashboard">Dashboard</a>
+        </div>
+      </nav>
+
+      <section class="hero-content container">
+        <div class="hero-copy">
+          <p class="eyebrow">Client acquisition for industrial packaging sales</p>
+          <h1>Find manufacturing companies that may be ramping production.</h1>
+          <p class="hero-text">
+            Track hiring activity, production roles, and regional demand signals
+            across Singapore and Malaysia to identify manufacturers that may soon
+            need more industrial packaging support.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#dashboard">View lead dashboard</a>
+            <a class="button button-secondary" href="#method">See scoring method</a>
+          </div>
+          <ul class="hero-bullets">
+            <li>Hiring-growth signal engine</li>
+            <li>Singapore and Malaysia market focus</li>
+            <li>Public-source job activity monitoring</li>
+          </ul>
+        </div>
+
+        <div class="hero-panel">
+          <div class="stat-card">
+            <span class="stat-label">Top signal this week</span>
+            <strong id="topCompany">Loading…</strong>
+            <span id="topSignal">Calculating active hiring score</span>
+          </div>
+          <div class="mini-grid">
+            <div class="mini-card">
+              <span>Tracked companies</span>
+              <strong id="companyCount">0</strong>
+            </div>
+            <div class="mini-card">
+              <span>Avg. hiring score</span>
+              <strong id="averageScore">0</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section id="why" class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Why this website matters</p>
+          <h2>Use hiring numbers as an early proxy for manufacturing volume growth.</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>Production hiring</h3>
+            <p>
+              More postings for operators, technicians, planners, and logistics staff
+              can indicate a plant preparing for greater throughput.
+            </p>
+          </article>
+          <article class="feature-card">
+            <h3>Regional relevance</h3>
+            <p>
+              Leads are weighted toward Singapore and Malaysia so your acquisition
+              efforts stay aligned with practical packaging demand.
+            </p>
+          </article>
+          <article class="feature-card">
+            <h3>Prospecting-ready</h3>
+            <p>
+              Each company profile includes a lead score, role mix, and a rationale
+              you can use in sales outreach.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="signals" class="section section-alt">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Signal framework</p>
+            <h2>How likely volume increase is estimated</h2>
+          </div>
+          <div class="signal-grid">
+            <div class="signal-card">
+              <h3>1. Hiring volume</h3>
+              <p>Count recent public job postings tied to manufacturing, plant, quality, warehouse, and supply chain functions.</p>
+            </div>
+            <div class="signal-card">
+              <h3>2. Role relevance</h3>
+              <p>Higher weighting for production, maintenance, operations, and packaging-related functions.</p>
+            </div>
+            <div class="signal-card">
+              <h3>3. Recency</h3>
+              <p>Fresh openings are scored more heavily than older postings.</p>
+            </div>
+            <div class="signal-card">
+              <h3>4. Market fit</h3>
+              <p>Singapore and Malaysia locations receive additional lead-priority weighting.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="method" class="section container">
+        <div class="section-heading">
+          <p class="eyebrow">Method</p>
+          <h2>Public-source intelligence, not black-box guessing</h2>
+        </div>
+        <div class="method-layout">
+          <div class="method-copy">
+            <p>
+              This MVP is designed to work with public job pages and scrape-friendly
+              job boards where feasible. It estimates likely manufacturing growth by
+              combining job counts, role types, and location fit.
+            </p>
+            <p>
+              LinkedIn-style hiring signals are represented through publicly available
+              job activity patterns rather than direct dependence on a private platform.
+            </p>
+          </div>
+          <div class="method-list-card">
+            <h3>Scoring inputs</h3>
+            <ul>
+              <li>Recent manufacturing openings</li>
+              <li>Production and plant role concentration</li>
+              <li>Logistics and warehouse demand</li>
+              <li>Country and city relevance</li>
+              <li>Signal freshness</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="section section-dark">
+        <div class="container">
+          <div class="dashboard-header">
+            <div>
+              <p class="eyebrow">Lead dashboard</p>
+              <h2>Manufacturing companies showing hiring-based expansion signals</h2>
+            </div>
+            <div class="dashboard-controls">
+              <input id="searchInput" type="search" placeholder="Search company or country" />
+              <select id="regionFilter">
+                <option value="all">All regions</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Malaysia">Malaysia</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="lead-table">
+              <thead>
+                <tr>
+                  <th>Company</th>
+                  <th>Region</th>
+                  <th>Recent jobs</th>
+                  <th>Production-role share</th>
+                  <th>Growth score</th>
+                  <th>Outlook</th>
+                </tr>
+              </thead>
+              <tbody id="leadTableBody"></tbody>
+            </table>
+          </div>
+
+          <div id="companyCards" class="company-cards"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div>
+          <strong>VolumeSignal</strong>
+          <p>Client acquisition intelligence for industrial packaging demand.</p>
+        </div>
+        <p>Built for Singapore and Malaysia manufacturing prospecting.</p>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
