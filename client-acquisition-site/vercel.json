@@ -1,0 +1,15 @@
+{
+  "buildCommand": "echo 'Static site, no build needed'",
+  "outputDirectory": ".",
+  "cleanUrls": true,
+  "routes": [
+    {
+      "src": "/(.+)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    }
+  ]
+}
