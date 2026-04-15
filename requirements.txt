@@ -3,3 +3,4 @@ pandas==3.0.2
 plotly==6.6.0
 python-dotenv
 google-api-python-client
+google-genai
