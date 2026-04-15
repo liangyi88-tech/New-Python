@@ -411,7 +411,7 @@ elif page == "Client Volume Tracker":
     st.dataframe(filtered_client_df, use_container_width=True, hide_index=True)
 
 # Data refresh info
-# Data refresh info
+
 elif page == "Market Intelligence":
     st.title("📰 Market Intelligence Feed")
     st.markdown("Latest live AI signals on packaging materials, sales volumes, and production growth.")
@@ -426,13 +426,13 @@ elif page == "Market Intelligence":
 
     st.info("Click below to dispatch your AI agent to search the live web for recent signals.")
 
-    # The Live Fetch Button
+    # THE SINGLE, UNIFIED FETCH BUTTON
     if st.button("🤖 Fetch Live Web Signals"):
         
-        with st.spinner("Agents are scouring the live web for your clients (this may take a minute)..."):
+        with st.spinner("Agents are scouring the live web... (Pausing 12s between searches to avoid rate limits)"):
             
             # Loop through your companies and run the AI
-            for company in tracked_companies:
+            for index, company in enumerate(tracked_companies):
                 analysis_json, sources = run_live_search_agent(company)
                 
                 # Build the Streamlit UI Cards using the JSON data
@@ -442,23 +442,28 @@ elif page == "Market Intelligence":
                         st.subheader(analysis_json.get('feed_headline', f"Live Update: {company}"))
                         
                         # Make the scraped sources clickable links
-        if st.button("🤖 Fetch Live Web Signals"):
-                
-                with st.spinner("Agents are scouring the live web... (Pausing between searches to avoid rate limits)"):
-                    
-                    for index, company in enumerate(tracked_companies):
-                        # 1. Run the AI Agent
-                        analysis_json, sources = run_live_search_agent(company)
-                        
-                        # 2. Display the result
-                        if "error" not in analysis_json:
-                            with st.container(border=True):
-                                st.subheader(analysis_json.get('feed_headline', company))
-                                # ... rest of your display code ...
+                        if sources:
+                            source_links = " | ".join([f"[{s['title']}]({s['uri']})" for s in sources[:2]])
+                            st.caption(f"**Live Search** | Sources: {source_links}")
                         else:
-                            # UPDATED: Show the actual error so you can debug!
-                            st.error(f"Error for {company}: {analysis_json['error']}")
+                            st.caption("**Live Search**")
                         
-                        # 3. PAUSE to respect the 5 RPM limit (except after the last item)
-                        if index < len(tracked_companies) - 1:
-                            time.sleep(12)
+                        # Tags
+                        tags = analysis_json.get('tags', [])
+                        if tags:
+                            tag_string = " • ".join([f"*{tag}*" for tag in tags])
+                            st.markdown(tag_string)
+                        
+                        # The Summary and the Impact
+                        st.write(analysis_json.get('summary', ''))
+                        st.success(f"**Packaging Impact:** {analysis_json.get('packaging_impact', '')}")
+                        
+                        # The action button (Notice the unique key here so it never duplicates!)
+                        if st.button(f"Analyze Lead Potential", key=f"btn_{company}"):
+                            st.success("Agent dispatched to update lead score.")
+                else:
+                    st.error(f"Error for {company}: {analysis_json['error']}")
+                
+                # PAUSE to respect the 5 RPM limit (except after the very last company)
+                if index < len(tracked_companies) - 1:
+                    time.sleep(12)
