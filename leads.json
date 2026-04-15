@@ -1,0 +1,20 @@
+[
+    {
+        "company": "ExxonMobil Singapore",
+        "location": "Singapore",
+        "last_score": 95,
+        "notes": "Major integrated refining and petrochemical complex. High volume user of industrial packaging for lubricants, specialty chemicals, and by-products."
+    },
+    {
+        "company": "Petronas Chemicals Group Berhad",
+        "location": "Malaysia",
+        "last_score": 92,
+        "notes": "Leading petrochemical producer in Southeast Asia. Extensive product range includes polymers, olefins, and specialty chemicals often transported in drums."
+    },
+    {
+        "company": "Wilmar International Limited",
+        "location": "Singapore",
+        "last_score": 88,
+        "notes": "Major agribusiness group involved in edible oils, oleochemicals, and specialty fats production. Significant need for drums for bulk liquid and semi-liquid products."
+    }
+]

@@ -253,7 +253,7 @@ client_df = load_client_data()
 
 # Sidebar Navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to:", ["VolumeSignal Leads", "Client Volume Tracker"])
+page = st.sidebar.radio("Go to:", ["VolumeSignal Leads", "Client Volume Tracker", "Market Intelligence"])
 
 st.sidebar.divider()
 
@@ -409,5 +409,68 @@ elif page == "Client Volume Tracker":
     st.dataframe(filtered_client_df, use_container_width=True, hide_index=True)
 
 # Data refresh info
+elif page == "Market Intelligence":
+    st.title("📰 Market Intelligence Feed")
+    st.markdown("Latest signals on packaging materials, sales volumes, and production growth in SG/MY.")
+    st.divider()
+
+    # --- Filters ---
+    st.sidebar.header("🔍 Filters")
+    keywords = ["Packaging", "Growth", "Volume", "Sales", "Production"]
+    selected_keywords = st.sidebar.multiselect(
+        "Filter Signals by Keyword:", 
+        options=keywords, 
+        default=["Packaging", "Growth", "Volume"]
+    )
+
+    # --- The Data Engine (Mocked for now) ---
+    news_data = [
+        {
+            "title": "Greif Announces Major Q3 Production Volume Increase in APAC",
+            "source": "🏢 Company Announcement",
+            "date": "2026-04-13",
+            "tags": ["Growth", "Volume", "Packaging"],
+            "summary": "Greif's recent quarterly report indicates a 15% surge in industrial packaging volume across Singapore and Malaysia due to chemical sector demands."
+        },
+        {
+            "title": "SCGM Berhad expands chemical-safe packaging lines",
+            "source": "💼 LinkedIn Post (Industry Analyst)",
+            "date": "2026-04-11",
+            "tags": ["Production", "Packaging"],
+            "summary": "Noticed high hiring activity for floor operators at the Johor plant. Looks like a new production line is going live next month. High probability of drum volume increase."
+        },
+        {
+            "title": "Petrochemical Export Sales Hit Record High in SG",
+            "source": "📰 News Article (Business Times)",
+            "date": "2026-04-09",
+            "tags": ["Sales", "Growth"],
+            "summary": "A massive surge in export sales means downstream chemical suppliers will likely see increased order books for the rest of the year, driving up IBC and drum demand."
+        }
+    ]
+
+    # --- Filter Logic ---
+    filtered_news = [
+        item for item in news_data 
+        if any(tag in selected_keywords for tag in item["tags"])
+    ]
+
+    # --- Display the Feed using Cards ---
+    if not filtered_news:
+        st.info("No recent news matches your selected keywords.")
+    else:
+        for item in filtered_news:
+            with st.container(border=True): 
+                st.subheader(item["title"])
+                st.caption(f"**{item['source']}** |  {item['date']}")
+                
+                tag_string = " • ".join([f"*{tag}*" for tag in item["tags"]])
+                st.markdown(tag_string)
+                
+                st.write(item["summary"])
+                
+                if st.button("🤖 Analyze Lead Potential", key=item["title"]):
+                    st.success(f"Agent dispatched! This will soon update the lead score for the relevant company.")
+
+# Data refresh info (This part sits at the very end of the file, flush left)
 st.divider()
 st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} • Data refreshes automatically")
