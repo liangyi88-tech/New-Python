@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import json
 import os
+import time 
 from volume_agent import run_live_search_agent
 from datetime import datetime
 import plotly.express as px
@@ -441,24 +442,23 @@ elif page == "Market Intelligence":
                         st.subheader(analysis_json.get('feed_headline', f"Live Update: {company}"))
                         
                         # Make the scraped sources clickable links
-                        if sources:
-                            source_links = " | ".join([f"[{s['title']}]({s['uri']})" for s in sources[:2]])
-                            st.caption(f"**Live Search** | Sources: {source_links}")
+        if st.button("🤖 Fetch Live Web Signals"):
+                
+                with st.spinner("Agents are scouring the live web... (Pausing between searches to avoid rate limits)"):
+                    
+                    for index, company in enumerate(tracked_companies):
+                        # 1. Run the AI Agent
+                        analysis_json, sources = run_live_search_agent(company)
+                        
+                        # 2. Display the result
+                        if "error" not in analysis_json:
+                            with st.container(border=True):
+                                st.subheader(analysis_json.get('feed_headline', company))
+                                # ... rest of your display code ...
                         else:
-                            st.caption("**Live Search**")
+                            # UPDATED: Show the actual error so you can debug!
+                            st.error(f"Error for {company}: {analysis_json['error']}")
                         
-                        # Tags
-                        tags = analysis_json.get('tags', [])
-                        if tags:
-                            tag_string = " • ".join([f"*{tag}*" for tag in tags])
-                            st.markdown(tag_string)
-                        
-                        # The Summary and the Impact
-                        st.write(analysis_json.get('summary', ''))
-                        st.success(f"**Packaging Impact:** {analysis_json.get('packaging_impact', '')}")
-                        
-                        # The action button
-                        if st.button(f"Analyze Lead Potential", key=f"btn_{company}"):
-                            st.success("Agent dispatched to update lead score.")
-                else:
-                    st.error(f"Could not fetch data for {company}. Check terminal for errors.")
+                        # 3. PAUSE to respect the 5 RPM limit (except after the last item)
+                        if index < len(tracked_companies) - 1:
+                            time.sleep(12)
