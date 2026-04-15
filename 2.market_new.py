@@ -1,68 +1,48 @@
 import streamlit as st
-from datetime import datetime, timedelta
-
-# 1. Page Setup
-st.set_page_config(page_title="Market News", page_icon="📰", layout="wide")
+# 1. Import your newly upgraded AI engine!
+from volume_agent import run_live_search_agent 
 
 st.title("📰 Market Intelligence Feed")
-st.markdown("Latest signals on packaging materials, sales volumes, and production growth.")
-st.divider()
+st.write("Latest signals on packaging materials, sales volumes, and production growth in SG/MY.")
 
-# 2. Keyword Filter (The UI)
-st.sidebar.header("Filter Signals")
-keywords = ["Packaging", "Growth", "Volume", "Sales", "Production", "Expansion"]
-selected_keywords = st.sidebar.multiselect("Select Keywords to track:", keywords, default=["Growth", "Volume"])
+# Your CRM target list (Keeping it to 3 for a quick test so you don't wait too long)
+tracked_companies = ["Greif", "SCGM Berhad", "Kimball Electronics"]
 
-# 3. Simulated Data Engine (Later, your Gemini Agent will feed this!)
-# We use mock data here to test the layout immediately.
-news_data = [
-    {
-        "title": "Greif Announces Major Q3 Production Volume Increase in APAC",
-        "source": "Company Announcement",
-        "date": (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d"),
-        "tags": ["Growth", "Volume", "Packaging"],
-        "summary": "Greif's recent quarterly report indicates a 15% surge in industrial packaging volume across Singapore and Malaysia due to chemical sector demands."
-    },
-    {
-        "title": "SCGM Berhad expands chemical-safe packaging lines",
-        "source": "LinkedIn Post (Industry Analyst)",
-        "date": (datetime.now() - timedelta(days=3)).strftime("%Y-%m-%d"),
-        "tags": ["Expansion", "Production", "Packaging"],
-        "summary": "Noticed high hiring activity for floor operators at the Johor plant. Looks like a new production line is going live next month."
-    },
-    {
-        "title": "Petrochemical Export Sales Hit Record High in SG",
-        "source": "Business Times News",
-        "date": (datetime.now() - timedelta(days=5)).strftime("%Y-%m-%d"),
-        "tags": ["Sales", "Growth"],
-        "summary": "A massive surge in export sales means downstream suppliers (drums, IBCs) will likely see increased order books for the rest of the year."
-    }
-]
-
-# 4. Filter Logic
-filtered_news = [
-    item for item in news_data 
-    if any(tag in selected_keywords for tag in item["tags"])
-]
-
-# 5. Display the Feed
-if not filtered_news:
-    st.info("No recent news matches your selected keywords.")
-else:
-    for item in filtered_news:
-        # Create a visual "Card" for each news item
-        with st.container():
-            st.subheader(item["title"])
-            st.caption(f"**Source:** {item['source']}  |  **Date:** {item['date']}")
+# 2. Add a trigger button. 
+# We use a button because live web searching takes 5-10 seconds per company. 
+# You don't want Streamlit to freeze every time you navigate pages!
+if st.button("Fetch Live Web Signals"):
+    
+    with st.spinner("Agents are scouring the live web for your clients..."):
+        
+        # 3. Loop through your companies and run the AI
+        for company in tracked_companies:
+            analysis_json, sources = run_live_search_agent(company)
             
-            # Show tags as little colored blocks
-            tag_string = " ".join([f"`{tag}`" for tag in item["tags"]])
-            st.markdown(tag_string)
-            
-            st.write(item["summary"])
-            
-            # Add a functional button for the future
-            if st.button(f"Analyze Lead Potential", key=item["title"]):
-                st.success("Agent dispatched! (This will trigger Gemini to update your lead score soon.)")
-            
-            st.divider()
+            # 4. Build the Streamlit UI Cards using the JSON data
+            if "error" not in analysis_json:
+                with st.container():
+                    # The dynamic headline
+                    st.subheader(analysis_json.get('feed_headline', f"Live Update: {company}"))
+                    
+                    # Make the scraped sources clickable links!
+                    if sources:
+                        source_links = " | ".join([f"[{s['title']}]({s['uri']})" for s in sources[:2]])
+                        st.caption(f"🤖 AI Live Search | Sources: {source_links}")
+                    else:
+                        st.caption("🤖 AI Live Search")
+                    
+                    # Tags
+                    tags = analysis_json.get('tags', [])
+                    st.write(" • ".join(tags))
+                    
+                    # The Summary and the Impact
+                    st.write(analysis_json.get('summary', ''))
+                    st.success(f"**Packaging Impact:** {analysis_json.get('packaging_impact', '')}")
+                    
+                    # The action button
+                    st.button(f"Analyze Lead Potential", key=f"btn_{company}")
+                    
+                    st.markdown("---")
+            else:
+                st.error(f"Could not fetch data for {company}. Check terminal for errors.")

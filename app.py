@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import json
 import os
+from volume_agent import run_live_search_agent
 from datetime import datetime
 import plotly.express as px
 
@@ -409,68 +410,55 @@ elif page == "Client Volume Tracker":
     st.dataframe(filtered_client_df, use_container_width=True, hide_index=True)
 
 # Data refresh info
+# Data refresh info
 elif page == "Market Intelligence":
     st.title("📰 Market Intelligence Feed")
-    st.markdown("Latest signals on packaging materials, sales volumes, and production growth in SG/MY.")
+    st.markdown("Latest live AI signals on packaging materials, sales volumes, and production growth.")
     st.divider()
 
-    # --- Filters ---
-    st.sidebar.header("🔍 Filters")
-    keywords = ["Packaging", "Growth", "Volume", "Sales", "Production"]
-    selected_keywords = st.sidebar.multiselect(
-        "Filter Signals by Keyword:", 
-        options=keywords, 
-        default=["Packaging", "Growth", "Volume"]
-    )
-
-    # --- The Data Engine (Mocked for now) ---
-    news_data = [
-        {
-            "title": "Greif Announces Major Q3 Production Volume Increase in APAC",
-            "source": "🏢 Company Announcement",
-            "date": "2026-04-13",
-            "tags": ["Growth", "Volume", "Packaging"],
-            "summary": "Greif's recent quarterly report indicates a 15% surge in industrial packaging volume across Singapore and Malaysia due to chemical sector demands."
-        },
-        {
-            "title": "SCGM Berhad expands chemical-safe packaging lines",
-            "source": "💼 LinkedIn Post (Industry Analyst)",
-            "date": "2026-04-11",
-            "tags": ["Production", "Packaging"],
-            "summary": "Noticed high hiring activity for floor operators at the Johor plant. Looks like a new production line is going live next month. High probability of drum volume increase."
-        },
-        {
-            "title": "Petrochemical Export Sales Hit Record High in SG",
-            "source": "📰 News Article (Business Times)",
-            "date": "2026-04-09",
-            "tags": ["Sales", "Growth"],
-            "summary": "A massive surge in export sales means downstream chemical suppliers will likely see increased order books for the rest of the year, driving up IBC and drum demand."
-        }
+    # Your CRM target list
+    tracked_companies = [
+        "Kimball Electronics", "Greif", "V.S. Industry", 
+        "SCGM Berhad", "Daibochi", "Dynapack Asia", 
+        "Briggs Packaging", "Vinda Singapore"
     ]
 
-    # --- Filter Logic ---
-    filtered_news = [
-        item for item in news_data 
-        if any(tag in selected_keywords for tag in item["tags"])
-    ]
+    st.info("Click below to dispatch your AI agent to search the live web for recent signals.")
 
-    # --- Display the Feed using Cards ---
-    if not filtered_news:
-        st.info("No recent news matches your selected keywords.")
-    else:
-        for item in filtered_news:
-            with st.container(border=True): 
-                st.subheader(item["title"])
-                st.caption(f"**{item['source']}** |  {item['date']}")
+    # The Live Fetch Button
+    if st.button("🤖 Fetch Live Web Signals"):
+        
+        with st.spinner("Agents are scouring the live web for your clients (this may take a minute)..."):
+            
+            # Loop through your companies and run the AI
+            for company in tracked_companies:
+                analysis_json, sources = run_live_search_agent(company)
                 
-                tag_string = " • ".join([f"*{tag}*" for tag in item["tags"]])
-                st.markdown(tag_string)
-                
-                st.write(item["summary"])
-                
-                if st.button("🤖 Analyze Lead Potential", key=item["title"]):
-                    st.success(f"Agent dispatched! This will soon update the lead score for the relevant company.")
-
-# Data refresh info (This part sits at the very end of the file, flush left)
-st.divider()
-st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} • Data refreshes automatically")
+                # Build the Streamlit UI Cards using the JSON data
+                if "error" not in analysis_json:
+                    with st.container(border=True):
+                        # The dynamic headline
+                        st.subheader(analysis_json.get('feed_headline', f"Live Update: {company}"))
+                        
+                        # Make the scraped sources clickable links
+                        if sources:
+                            source_links = " | ".join([f"[{s['title']}]({s['uri']})" for s in sources[:2]])
+                            st.caption(f"**Live Search** | Sources: {source_links}")
+                        else:
+                            st.caption("**Live Search**")
+                        
+                        # Tags
+                        tags = analysis_json.get('tags', [])
+                        if tags:
+                            tag_string = " • ".join([f"*{tag}*" for tag in tags])
+                            st.markdown(tag_string)
+                        
+                        # The Summary and the Impact
+                        st.write(analysis_json.get('summary', ''))
+                        st.success(f"**Packaging Impact:** {analysis_json.get('packaging_impact', '')}")
+                        
+                        # The action button
+                        if st.button(f"Analyze Lead Potential", key=f"btn_{company}"):
+                            st.success("Agent dispatched to update lead score.")
+                else:
+                    st.error(f"Could not fetch data for {company}. Check terminal for errors.")
