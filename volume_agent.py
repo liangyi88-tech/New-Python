@@ -10,7 +10,7 @@ def run_live_search_agent(company_name: str):
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
     # We use gemini-2.5-pro for deep reasoning and live search capabilities
-    model_id = "gemini-2.5-pro" 
+    model_id = "gemini-2.5-flash"
 
     # 2. Enable Google Search (The "Agentic Internet" Tool)
     search_tool = types.Tool(
